@@ -1,0 +1,41 @@
+from tkinter import *
+import tkinter.font
+from gpiozero import LED
+import RPi.GPIO
+
+RPi.GPIO.setmode(RPi.GPIO.BCM)
+
+ledWhite = LED(4)
+ledRed = LED(17)
+ledBlue = LED(18)
+
+win = Tk()
+win.geometry("280x120")
+win.title("5.2 GUI")
+font = tkinter.font.Font(family = "Arial", size = 12, weight = "bold")
+frame = Frame(win)
+frame.pack()
+
+def ledToggle(led1, led2, led3):
+        led1.on()
+        led2.off()
+        led3.off()
+
+def close():
+    RPi.GPIO.cleanup()
+    win.destroy()
+    
+ledToggle(ledWhite, ledBlue, ledRed)
+ledRButtonWhite = Radiobutton(win, text = "Turn on White LED", font = font, command = lambda: ledToggle(ledWhite, ledBlue, ledRed), value = 1, height = 1, width = 30)
+ledRButtonWhite.pack(anchor = W)
+ledRButtonWhite.select()
+ledRButtonBlue = Radiobutton(win, text = "Turn on Blue LED", font = font, command = lambda: ledToggle(ledBlue, ledWhite, ledRed), value = 3, height = 1, width = 30)
+ledRButtonBlue.pack(anchor = W)
+ledRButtonRed = Radiobutton(win, text = "Turn on Red LED", font = font, command = lambda: ledToggle(ledRed, ledWhite, ledBlue), value = 2, height = 1, width = 30)
+ledRButtonRed.pack(anchor = W)
+
+exitButton = Button(win, text = "Exit", font = font, command = close, height = 1, width = 6)
+exitButton.pack(side = BOTTOM)
+
+win.protocol("WM_DELETE_WINDOW", close)
+win.mainloop()
